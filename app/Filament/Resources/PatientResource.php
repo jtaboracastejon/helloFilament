@@ -12,6 +12,8 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -73,10 +75,25 @@ class PatientResource extends Resource
     {
         return $table
             ->columns([
-                //
+                TextColumn::make('name')
+                    ->label('Nombre')
+                    ->searchable(),
+                TextColumn::make('type')
+                    ->label('Tipo'),
+                TextColumn::make('date_of_birth')
+                    ->label('Fecha de nacimiento')
+                    ->sortable(),
+                TextColumn::make('owner.name')
+                    ->label('Dueño')
+                    ->searchable(),
             ])
             ->filters([
-                //
+                SelectFilter::make('type')
+                    ->label('Tipo')
+                    ->options([
+                        'dog' => 'Perro',
+                        'cat' => 'Gato',
+                    ]),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

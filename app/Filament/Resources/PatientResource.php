@@ -6,6 +6,9 @@ use App\Filament\Resources\PatientResource\Pages;
 use App\Filament\Resources\PatientResource\RelationManagers;
 use App\Models\Patient;
 use Filament\Forms;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -23,7 +26,46 @@ class PatientResource extends Resource
     {
         return $form
             ->schema([
-                //
+                Forms\Components\TextInput::make('name')
+                    ->label('Nombre')
+                    ->required()
+                    ->maxLength(255),
+
+                Select::make('type')
+                    ->label('Tipo')
+                    ->options([
+                        'dog' => 'Perro',
+                        'cat' => 'Gato',
+                    ])
+                    ->required(),
+
+                DatePicker::make('date_of_birth')
+                    ->label('Fecha de nacimiento')
+                    ->required()
+                    ->maxDate(now()),
+
+                Select::make('owner_id')
+                    ->label('Dueño')
+                    ->relationship('owner', 'name')
+                    ->searchable()
+                    ->preload()
+                    ->createOptionForm([
+                        TextInput::make('name')
+                            ->label('Nombre')
+                            ->required()
+                            ->maxLength(255),
+                        TextInput::make('email')
+                            ->label('Correo electrónico')
+                            ->required()
+                            ->email()
+                            ->maxLength(255),
+                        TextInput::make('phone')
+                            ->label('Teléfono')
+                            ->tel()
+                            ->required(),
+                    ])
+                    ->required(),
+
             ]);
     }
 
